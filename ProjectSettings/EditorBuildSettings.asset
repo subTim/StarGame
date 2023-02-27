@@ -9,6 +9,6 @@ EditorBuildSettings:
     path: Assets/StarGame/Scenes/initScene.unity
     guid: 03fd41dafe73cd4418bd590f1dc6721a
   - enabled: 1
-    path: Assets/PolygonSciFiSpace/Scenes/Demo_Exterior.unity
-    guid: 7dc0f3408c08040458ba7cc777331949
+    path: Assets/StarGame/Scenes/MainScene.unity
+    guid: 9fc0d4010bbf28b4594072e72b8655ab
   m_configObjects: {}

@@ -13,7 +13,12 @@ public class LoadSceneController : MonoBehaviour
             Instance = this;
     }
 
-    public void LoadRealismScene()
+    private void Start()
+    {
+        LoadMainScene();
+    }
+
+    public void LoadMainScene()
     {
         SceneManager.LoadScene(_mainSceneIndex);
     }
