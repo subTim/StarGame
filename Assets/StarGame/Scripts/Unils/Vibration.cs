@@ -10,11 +10,11 @@ public static class Vibration
             Taptic.Medium();
         //}
 #else
-        if (UserData.Instance.VibrationOn)
-        {
-            Lofelt.NiceVibrations.HapticPatterns.PlayEmphasis(amplitude, frequency);
+        // if (UserData.Instance.VibrationOn)
+        // {
+            // Lofelt.NiceVibrations.HapticPatterns.PlayEmphasis(amplitude, frequency);
             //Lofelt.NiceVibrations.HapticPatterns.PlayPattern(Lofelt.NiceVibrations.HapticPatterns.Medium);
         }
 #endif
     }
-}
+// }
