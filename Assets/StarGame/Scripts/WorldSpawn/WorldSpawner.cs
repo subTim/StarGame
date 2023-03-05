@@ -1,87 +1,56 @@
-using System;
-using System.Collections.Generic;
+
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class WorldSpawner : MonoBehaviour
 {
-    [SerializeField] private List<GameObject> prefabs;
+    [SerializeField,Range(1f, 30f)] private float percentOfSpawn;
+    [SerializeField] private float removmentdistance;
+    [SerializeField] private ChunksSpawner chunksSpawner;
 
-    [SerializeField] private float worldRadius;
-    [SerializeField] private float maxRadius;
-    [SerializeField] private float minRadius;
+    [SerializeField] private Ship player;
+    private Pull<Asteroid> _asteroidsPull;
     
-    [SerializeField] private float maxOffset;
-    [SerializeField] private float minOffset;
+    private CancellationToken _currentCancelation;
+    private CancellationTokenSource _sourceToken;
 
-    [SerializeField,Range(1, 100)] private float percentOfSpawn;
-
-    private Pull _asteroids;
-    private List<GameObject> _activeAsteroids;
-    
-    private float _xPlusCord;
-    private float _xMinusCord;
-    
-    private float _yPlusCord;
-    private float _yMinusCord;
-
-    private float _zMinusCord;
-    private float _zPlusCord;
-
-    private Action _addAll;
+    private const int CANCELLATION_TIME_GAP = 10000;
 
 
-    private void Awake()
+    private void Start()
     {
-        _asteroids = new Pull(transform, true, prefabs, 200);
+        chunksSpawner.Init();
+        Spawn();
     }
-
+    
     private void Spawn()
     {
-        
+        chunksSpawner.SpawnChunk(player.transform.position);
+    }
+    
+    private async void StartUpDatingWorld()
+    {
+        CreateNewToken();
+        while (true)
+        {
+            if (_currentCancelation.IsCancellationRequested)
+                return;
+            
+            Task timeToWait = Task.Delay(CANCELLATION_TIME_GAP);
+            await timeToWait;
+        }
     }
 
-    private void AddHesitation()
+    private void CreateNewToken()
     {
-        
-    }
-    
-    private void AddX()
-    {
-        
-    }
-    
-    private void MinusX()
-    {
-        
-    }
-    
-    private void AddY()
-    {
-        
-    }
-    
-    private void MinusY()
-    {
-        
+        _sourceToken = new CancellationTokenSource();
+        _currentCancelation = _sourceToken.Token;
     }
 
-    private void AddZ()
+    private void StopUpdatingWorld()
     {
-        
+        _sourceToken.Cancel();
     }
-    
-    private void MinusZ()
-    {
-        
-    }
-
-    private Vector3 GetRandomPosition(Vector3 parentPos)
-    {
-        parentPos += GetRandomPosition();
-        return parentPos;
-    }
-
-    private Vector3 GetRandomPosition() => new(GetRandomValue(), GetRandomValue(), GetRandomValue());
-    private float GetRandomValue() => Random.Range(minRadius, maxRadius);
 }

@@ -4,31 +4,32 @@ using UnityEngine;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
-public class Pull
+public class Pull<T> where T : MonoBehaviour
 {
-    private List<GameObject> _prefabs;
+    private List<T> _prefabs;
     private Transform _container;
-    private Queue<GameObject> _pull = new(100);
+    private Queue<T> _pull = new(100);
     private int _count;
     private bool _autoExpand;
 
-    public Pull(Transform container, bool autoExpand, List<GameObject> prefabs, int count = 0)
+    public Pull(Transform container, bool autoExpand, List<T> prefabs, int count = 0)
     {
         _container = container;
         _prefabs = prefabs;
         _autoExpand = autoExpand;
         _count = count;
+        CreatePool();
     }
 
     public void CreatePool()
     {
-        _pull = new Queue<GameObject>();
+        _pull = new Queue<T>();
 
         for (int i = 0; i < _count; i++)
             CreateOne();
     }
 
-    private GameObject GetRandomPrefab()
+    private T GetRandomPrefab()
     {
         int index = Random.Range(0, _prefabs.Count);
 
@@ -54,10 +55,10 @@ public class Pull
         _pull.Clear();
     }
 
-    public void ReturnToPoll(GameObject element)
+    public void ReturnToPoll(T element)
     {
         _pull.Enqueue(element);
-        element.SetActive(false);
+        element.gameObject.SetActive(false);
     }
 
     public bool CanProvide()
@@ -70,26 +71,9 @@ public class Pull
 
         return true;
     }
-
-    public GameObject GetElementWithPredicate(Predicate<GameObject> predicate)
+    public T GetElement()
     {
-        GameObject element = null;
-        do
-        {
-            if (element != null)
-                ReturnToPoll(element);
-
-            element = GetElement();
-
-        } while (predicate(element) == false);
-
-        element.SetActive(true);
-        return element;
-    }
-
-    public GameObject GetElement()
-    {
-        GameObject element = null;
+        T element = null;
 
         if (_pull.Count != 0)
             element = _pull.Dequeue();
