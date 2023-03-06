@@ -2,15 +2,13 @@
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class WorldSpawner : MonoBehaviour
 {
-    [SerializeField,Range(1f, 30f)] private float percentOfSpawn;
-    [SerializeField] private float removmentdistance;
-    [SerializeField] private ChunksSpawner chunksSpawner;
-
     [SerializeField] private Ship player;
+    [SerializeField] private float removmentdistance;
+    
+    [SerializeField] private Chunks chunks;
     private Pull<Asteroid> _asteroidsPull;
     
     private CancellationToken _currentCancelation;
@@ -21,13 +19,14 @@ public class WorldSpawner : MonoBehaviour
 
     private void Start()
     {
-        chunksSpawner.Init();
+        chunks.Init();
         Spawn();
+        StartUpDatingWorld();
     }
     
     private void Spawn()
     {
-        chunksSpawner.SpawnChunk(player.transform.position);
+        chunks.GenerateChunks(player.transform.position);
     }
     
     private async void StartUpDatingWorld()
@@ -37,6 +36,8 @@ public class WorldSpawner : MonoBehaviour
         {
             if (_currentCancelation.IsCancellationRequested)
                 return;
+
+            chunks.Translate(removmentdistance, player.transform.position);
             
             Task timeToWait = Task.Delay(CANCELLATION_TIME_GAP);
             await timeToWait;

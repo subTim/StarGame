@@ -330,15 +330,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ffb836122b74832be62542aa803ef7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  percentOfSpawn: 17.9
-  removmentdistance: 0
-  chunksSpawner:
+  percentOfSpawn: 9.1
+  removmentdistance: 50
+  chunks:
     prefabs:
     - {fileID: 230391445247136107, guid: cbef0924e65d383449a75069a4ad1e0b, type: 3}
     chunkSize: 50
-    chunkCapacity: 10
-    maxOffset: 20
-    minOffset: 5
+    chunkCapacity: 8
+    maxOffset: 30
+    minOffset: 10
     container: {fileID: 646601271}
   player: {fileID: 731368572}
 --- !u!4 &646601271
